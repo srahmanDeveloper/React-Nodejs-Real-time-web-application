@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 class Form extends React.Component {
+
+  
   constructor(props) {
     super(props);
 
@@ -11,6 +13,8 @@ class Form extends React.Component {
       body: '',
       author: '',
     }
+
+    this.getProductInformation();
 
     this.handleChangeField = this.handleChangeField.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,6 +51,25 @@ class Form extends React.Component {
         .then((res) => onEdit(res.data))
         .then(() => this.setState({ title: '', body: '', author: '' }));
     }
+  }
+
+  getProductInformation(){
+
+    const { onSubmit, articleToEdit, onEdit } = this.props;
+    const { title, body, author } = this.state;
+
+    
+
+    const user = {
+      name: ''
+    };
+
+    return axios.get('http://localhost:4000/product/getProductInformation', { user })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+        this.setState({ title: res.data[0].ProductPrice, body: 'rrrr', author: 'srahman' });
+      })
   }
 
   handleChangeField(key, event) {
