@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito|Poppins:500|Open+Sans');
+@import "~bootstrap/scss/bootstrap";
+
+body, html {
+  height: 100%;
+  background-color: rgba(0,0,0,.018);
+  color: rgba(0,0,0,.75);
+  font-family: 'Nunito';
+}
+
+    p,h1,h2,h3 {
+
+      color: #663399;
+    }
+    h4{
+
+      color: #663399;
+
+    }
+    .listIconOkay{
+
+      margin-top: 15px;
+      font-size:15px;
+      color:#663399;
+      display:block;
+    }
+
+    .imageMaxHeight{
+
+      max-height: 15em;
+    }
+
+    .textUnderLine {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .floatingImageDimension{
+
+      max-width: 15em;
+    }
+
+    .sectionGap{
+      margin-top: 5em;
+    }
+    .floatingImage{
+
+      position: relative;
+      left:10%;
+      
+    }
+
+    .button {
+
+    	background-color: #663399;
+    }
+
+    @media screen and (min-width: 280px) and (max-width:800px) {
+  		
+  		.floatingImage {top:-5em;}
+	}
+
+  .panelMargin{
+    margin:55px 50px 50px 50px;
+  }
