@@ -11,7 +11,7 @@ class Form extends React.Component {
     this.state = {
       title: '',
       body: '',
-      author: '',
+      author: ''
     }
 
     this.getProductInformation();
