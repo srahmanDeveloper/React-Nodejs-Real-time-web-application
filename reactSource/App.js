@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import About from "./components/About";
 import Form from "./components/Form";
 import ContactUs from "./components/ContactUs";
+import ProductShop from "./components/ProductShop";
 
 class App extends Component {
   render() {
@@ -15,6 +16,7 @@ class App extends Component {
             <Route exact path="/About" component={About} />
             <Route exact path="/Form" component={Form} />
             <Route exact path="/Contact" component={ContactUs} />
+            <Route exact path="/ProductShop" component={ProductShop} />
             
 		      </div>
 	      </Router>
