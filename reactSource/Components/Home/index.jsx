@@ -1,71 +1,221 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
+import socketIOClient from "socket.io-client";
+
 import NewProduct from 'C:/Users/saif/ToyShop/assetSource/image/NewProduct.JPG';
 import SellProduct from 'C:/Users/saif/ToyShop/assetSource/image/SellProduct.JPG';
+import DynamicView from 'C:/Users/saif/ToyShop/assetSource/image/DynamicView.JPG';
+import Gallery from 'C:/Users/saif/ToyShop/assetSource/image/Gallery.JPG';
+
+var url = 'SaifTest';
+
+var stations = [
+  {call:'station one',frequency:'000'},
+  {call:'station two',frequency:'001'}
+]; 
 
 class Home extends Component {
 
-render() {
-return(
-<div>
-<div className="col-sm-6">
-<h4> Welcome to eShop.  </h4>
-<p>This website help you sell your products. Also you can buy products for less. </p>
-<div className="row">
-<div className="col">
-<h4> Sell </h4>
-<br/>
-<p> Got some unwanted products. Sell in our website for free. </p>
-</div>
-<div className="col">
-<h4> Buy </h4>
-<br/>
-<p> Looking to purchase new/used  products for less. Please browse our website.  </p>
-</div>
-</div>
-<div className="row">
-<div className="col">
-<button type="button" className="btn btn-dark button" name="getStarted"> Sell Your Product </button>
-</div>
 
-<div className="col">
-<button type="button"  className="btn btn-dark button" name="getStarted"> Buy New Product </button>
-</div>
-<div className="col-sm-6"><img src={NewProduct} /></div>
-</div>
+constructor(props) {
+    
+    super(props);
+    var url = '';
+	url = 'http://localhost:4000';
 
-</div>
-<div className="row sectionGap">
-<div className="col-sm-6"><img src={SellProduct} /></div>
+    
 
-<div className="col-sm-6 col-md-4 col-lg-6">
-<h4> Secure Payment  </h4>
-<p>We provide secure transaction management system for all the online transaction. </p>
-<div className="row">
+    this.state = {
+      title: 'wwww',
+      body: '',
+      author: '',
+      message: 'eeeee'
+    }
 
-<div className="col">
+    this.initiateReaTimeChat();
+  }
 
-<h4> Live Chat </h4>
-<br/>
-<p> Love to chat with all connected users. Click get started button below to make a start.   </p>
-</div>
-<div className="col">
-<h4> Queries? </h4>
-<br/>
-<p> Coming Soon... </p>
-</div>
-</div>
-<div className="row">
+  initiateReaTimeChat(nextProps) {
+
+  	
+
+  	const socket = socketIOClient('http://localhost:4000');
+
+    socket.on("FromAPI", data => {
+
+      console.log(data);
+    });
+
+    this.getMessages();
+    
+  }
+
+	getMessages(){
+
+		const socket = socketIOClient('http://localhost:4000');
+		socket.on('new-message', (message) => {
+			console.log(message);
+			this.setState({message: message});
+		});
+	}
+
+	sendMessage() {
+
+		var message = this.state.message;
+		console.log(this.state);
+
+		const socket = socketIOClient('http://localhost:4000');
+		socket.emit('new-message', message);
+	}
+
+	updateMessage(event){
+        
+        console.log(event.target.value);
+		this.setState({message: event.target.value});
+	}
 
 
-</div>
+	render() {
 
-</div>
-</div>
+		return(
 
-</div>
+			<div>
+				<div className="container-fluid">
+					<div className="row sectionGap">
+						<div className="col-sm-6">
+					        <h4> Welcome to eShop.  </h4>
+					        <p>This website help you sell your products. Also you can buy products for less. </p>
+					        <div className="row">
+					          <div className="col">
+					            <h4> Sell </h4>
+					            <br/>
+					            <p> Got some unwanted products. Sell in our website for free. </p>
+					          </div>
+					          <div className="col">
+					            <h4> Buy </h4>
+					             <br/>
+					            <p> Looking to purchase new/used  products for less. Please browse our website.  </p>
+					          </div>
+					        </div>
+					        <div className="row">
+					          <div className="col">
+					            <button type="button" className="btn btn-dark button" name="getStarted"> Sell Your Product </button>
+					          </div>
 
-);
-}
+					          <div className="col">
+					            <button type="button"  className="btn btn-dark button" name="getStarted"> Buy New Product </button>
+					          </div>
+
+					        </div>
+
+					      </div>
+					      <div className="col-sm-6"><img className="imageMaxHeight" src ={NewProduct} /></div>
+					</div>
+
+					<div className="row sectionGap">
+      
+					      <div className="col-sm-6 col-md-8 col-lg-6"><img className="imageMaxHeight" src={SellProduct} /></div>
+
+					      <div className="col-sm-6 col-md-4 col-lg-6">
+					        <h4> Secure Payment  </h4>
+					        <p>We provide secure transaction management system for all the online transaction. </p>
+					        <div className="row">
+
+					          
+					          <div className="col">
+					            <h4> Queries? </h4>
+					             <br/>
+					            <p> Coming Soon... </p>
+					          </div>
+					        </div>
+					        <div className="row">
+					          <div className="col">
+					            <button type="button" className="btn btn-dark button" name="getStarted"> Get Started </button>
+					          </div>
+
+					          <div className="col">
+					            <p> <b> Questions? Talk to our team <span className="glyphicon glyphicon-arrow-right"> </span> </b></p>
+					          </div>
+
+					        </div>
+
+					      </div>
+					    </div>
+
+					    <div className="row sectionGap">
+					      <div className="col-sm-8 col-md-6">
+
+					        <h4> Sold Products Gallery </h4>
+					        <p > Wish to browse our sold product gallery. <abbr className="textUnderLine"> Please click here </abbr> </p>
+					        
+					        <div className="row">
+					          <div className="col">
+					            <h4> Our Services </h4>
+					            <br/>
+					            
+					          </div>
+					          
+					        </div>
+					        <div className="row">
+					          <div className="col">
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Purchase Used Products For Less  </span>
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Sell Unwanted Products  </span>
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Offer Unwanted Products For Free  </span>
+					          </div>
+
+					        </div>
+					      </div>
+					      <div className="col-sm-4 col-md-6"><img className="imageMaxHeight floatingImageDimension" src ={DynamicView} /> <img className="imageMaxHeight floatingImage floatingImageDimension" src ={Gallery} />
+			    		 </div>
+					    </div>
+
+
+					    <br />
+    
+					    <div className="row sectionGap">
+					      
+					      <div className="col-sm-7 col-md-6 col-lg-6">
+					        <h4> About Us </h4>
+
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Purchase Used Products For Less  </span>
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Sell Unwanted Products  </span>
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Offer Unwanted Products For Free  </span>
+					        <br/>
+					        
+					      </div>
+
+					      <div className="col-sm-5 col-md-6 col-lg-6">
+					        <h3> Contact Us </h3>
+					         
+					          <span className="glyphicon glyphicon-ok-circle listIconOkay"> Mobile Number: 0750 87* ****</span>
+					          <span className="glyphicon glyphicon-ok-circle listIconOkay"> Fax Number: 01247******  </span>
+					          <span className="glyphicon glyphicon-ok-circle listIconOkay"> Address: ** The Green, Wigan, Lancashire, Wn5 *** </span>
+					          <br/>
+					          <h4> Live Chat </h4>
+					          <br/>
+					          <div>
+					            <p> {this.state.message} </p>
+					          </div>
+					          
+					          <input type="text" onChange={this.updateMessage.bind(this)}></input>
+					          <button onClick={this.sendMessage.bind(this)}>Send</button>
+
+					          <div>
+							    {stations.map(station => (
+							      <div className="station" key={station.call}>{station.call}</div>
+							    ))}
+							  </div>
+  
+					      </div>
+					      
+					    </div>
+
+
+				</div>
+
+			</div>
+
+		);
+	}
 }
 
 export default Home;
