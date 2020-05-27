@@ -5,7 +5,7 @@ import About from "./components/About";
 import Form from "./components/Form";
 import ContactUs from "./components/ContactUs";
 import ProductShop from "./components/ProductShop";
-
+import BirdGallery from "./components/BirdGallery";
 class NavLink extends Component {
 
   render() {
@@ -74,6 +74,7 @@ class App extends Component {
 	            <Route exact path="/Form" component={Form} />
 	            <Route exact path="/Contact" component={ContactUs} />
 	            <Route exact path="/ProductShop" component={ProductShop} />
+              <Route exact path="/BirdGallery" component={BirdGallery} />
             
 		      </div>
 	      </Router>
