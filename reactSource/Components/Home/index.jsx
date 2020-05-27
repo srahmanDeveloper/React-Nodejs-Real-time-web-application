@@ -8,9 +8,10 @@ import Gallery from 'C:/Users/saif/ToyShop/assetSource/image/Gallery.JPG';
 
 var url = 'SaifTest';
 
-var stations = [
-  {call:'station one',frequency:'000'},
-  {call:'station two',frequency:'001'}
+var liveChatMessages = [
+
+  {id:1,message:''}
+  
 ]; 
 
 class Home extends Component {
@@ -25,10 +26,12 @@ constructor(props) {
     
 
     this.state = {
-      title: 'wwww',
+      title: '',
       body: '',
       author: '',
-      message: 'eeeee'
+      message: '',
+      typedMessage: '',
+      liveChat: [{id:1,message:''}]
     }
 
     this.initiateReaTimeChat();
@@ -55,7 +58,15 @@ constructor(props) {
 		socket.on('new-message', (message) => {
 			console.log(message);
 			this.setState({message: message});
+			liveChatMessages.push({
+				id: Date.now(),
+				message: message
+			});
+			this.setState({liveChat: liveChatMessages});
+			console.log(liveChatMessages);
 		});
+
+
 	}
 
 	sendMessage() {
@@ -65,12 +76,14 @@ constructor(props) {
 
 		const socket = socketIOClient('http://localhost:4000');
 		socket.emit('new-message', message);
+		this.setState({typedMessage: ''});
 	}
 
 	updateMessage(event){
         
         console.log(event.target.value);
 		this.setState({message: event.target.value});
+		this.setState({typedMessage: event.target.value});
 	}
 
 
@@ -193,17 +206,15 @@ constructor(props) {
 					          <h4> Live Chat </h4>
 					          <br/>
 					          <div>
-					            <p> {this.state.message} </p>
-					          </div>
-					          
-					          <input type="text" onChange={this.updateMessage.bind(this)}></input>
-					          <button onClick={this.sendMessage.bind(this)}>Send</button>
-
-					          <div>
-							    {stations.map(station => (
-							      <div className="station" key={station.call}>{station.call}</div>
+							    {this.state.liveChat.map(each => (
+							      <div className="each" key={each.id}>{each.message}</div>
 							    ))}
 							  </div>
+					          
+					          <input type="text" value={this.state.typedMessage} onChange={this.updateMessage.bind(this)}></input>
+					          <button onClick={this.sendMessage.bind(this)}>Send</button>
+
+					          
   
 					      </div>
 					      
