@@ -3,25 +3,28 @@
 
 body, html {
   height: 100%;
-  background-color: rgba(0,0,0,.018);
+  background-color: #ebebe0;
   color: rgba(0,0,0,.75);
   font-family: 'Nunito';
 }
 
     p,h1,h2,h3 {
 
-      color: #663399;
+      color: #804000;
     }
     h4{
 
-      color: #663399;
+      color: #804000;
 
+    }
+    label{
+      color: #ffffff;
     }
     .listIconOkay{
 
       margin-top: 15px;
       font-size:15px;
-      color:#663399;
+      color:#804000;
       display:block;
     }
 
@@ -52,7 +55,7 @@ body, html {
 
     .button {
 
-    	background-color: #663399;
+    	background-color: #804000;
     }
 
     @media screen and (min-width: 280px) and (max-width:800px) {
@@ -62,4 +65,41 @@ body, html {
 
   .panelMargin{
     margin:55px 50px 50px 50px;
+  }
+
+  .inputStyle {
+
+    width: 60%;
+    margin-left: 20%;
+    color:#ffffff;
+  }
+
+  .formBackGround {
+    background-color: #663300;
+    max-width: 60%;
+    position:relative;
+    left: 20%;
+    margin-bottom: 10%;
+  }
+
+  .formTitle{
+
+    color:#ffffff;
+    position:relative;
+    left:40%;
+  }
+
+  .navigationItemStyling {
+
+    color:#ffffff !important;
+    align:right;
+    text-decoration: underline;
+  }
+
+  .bg-light{
+    background-color: #663300 !important;
+  }
+
+  .navbar-nav{
+    margin-left: 62%;
   }
