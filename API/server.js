@@ -35,9 +35,9 @@ const fs = require("fs");
 
 app.use(fileUpload({
     useTempFiles : true,
-    tempFileDir : 'C:/Users/saif/OnlineProductShop/API/temp/'
+    tempFileDir : 'C:/Users/saif/ToyShop/API/temp/'
 }));
-const imageUploadDir = 'C:/Users/saif/OnlineProductShop/src/assets/upload/';
+const imageUploadDir = 'C:/Users/saif/ToyShop/assetSource/upload/';
 
 app.post('/product/upload/', function(req, res) {
   
