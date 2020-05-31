@@ -95,27 +95,27 @@ constructor(props) {
 				<div className="container-fluid">
 					<div className="row sectionGap">
 						<div className="col-sm-6">
-					        <h4> Welcome to eShop.  </h4>
-					        <p>This website help you sell your products. Also you can buy products for less. </p>
+					        <h3> Welcome to Online Toy Shop.  </h3>
+					        <p>This website help you sell your unwanted toys. Also you can buy new/used toys for less amount. </p>
 					        <div className="row">
 					          <div className="col">
-					            <h4> Sell </h4>
+					            <h4> Sell Unwanted Toys </h4>
 					            <br/>
 					            <p> Got some unwanted products. Sell in our website for free. </p>
 					          </div>
 					          <div className="col">
-					            <h4> Buy </h4>
+					            <h4> Purchase New/Used Toys </h4>
 					             <br/>
-					            <p> Looking to purchase new/used  products for less. Please browse our website.  </p>
+					            <p> Looking to purchase new/used toys for less amount. Please browse our website.  </p>
 					          </div>
 					        </div>
 					        <div className="row">
 					          <div className="col">
-					            <button type="button" className="btn btn-dark button" name="getStarted"> Sell Your Product </button>
+					            <button type="button" className="btn btn-dark button" name="getStarted"> Sell Your Toy </button>
 					          </div>
 
 					          <div className="col">
-					            <button type="button"  className="btn btn-dark button" name="getStarted"> Buy New Product </button>
+					            <button type="button"  className="btn btn-dark button" name="getStarted"> Buy New/Used Toy </button>
 					          </div>
 
 					        </div>
@@ -129,7 +129,7 @@ constructor(props) {
 					      <div className="col-sm-6 col-md-8 col-lg-6"><img className="imageMaxHeight" src={SellProduct} /></div>
 
 					      <div className="col-sm-6 col-md-4 col-lg-6">
-					        <h4> Secure Payment  </h4>
+					        <h4> Online Secure Payment  </h4>
 					        <p>We provide secure transaction management system for all the online transaction. </p>
 					        <div className="row">
 
@@ -157,8 +157,8 @@ constructor(props) {
 					    <div className="row sectionGap">
 					      <div className="col-sm-8 col-md-6">
 
-					        <h4> Sold Products Gallery </h4>
-					        <p > Wish to browse our sold product gallery. <abbr className="textUnderLine"> Please click here </abbr> </p>
+					        <h4> Online Bird Gallery </h4>
+					        <p > Wish to browse our online bird gallery. <abbr className="textUnderLine"> Please click here </abbr> </p>
 					        
 					        <div className="row">
 					          <div className="col">
@@ -170,9 +170,9 @@ constructor(props) {
 					        </div>
 					        <div className="row">
 					          <div className="col">
-					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Purchase Used Products For Less  </span>
-					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Sell Unwanted Products  </span>
-					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Offer Unwanted Products For Free  </span>
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Purchase Used Toys For Less  </span>
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Sell Unwanted Toys  </span>
+					            <span className="glyphicon glyphicon-ok-circle listIconOkay"> Offer Unwanted Toys For Free  </span>
 					          </div>
 
 					        </div>
