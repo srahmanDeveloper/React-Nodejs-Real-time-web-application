@@ -16,13 +16,14 @@ class ProductForm extends React.Component {
       author: '',
       email: 'srahman@test.com',
       password: 'rony0692A',
-      formObj:{}
+      formObj:{},
+      selectedFile: null,
+      productUniqueId : Date.now()
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onChangeHandler = this.onChangeHandler.bind(this);
   }
-
-  
 
   handleSubmit(event){
 
@@ -31,12 +32,12 @@ class ProductForm extends React.Component {
     console.log(event.target.elements.productFormProductDes.value);
     console.log(this.state);
     var productObj = {
-      title: event.target.elements.productFormTitle.value,
-      price: event.target.elements.productFormPrice.value,
-      id: event.target.elements.productFormUniqueId.value,
-      offer:event.target.elements.productFormOffer.value,
-      type:event.target.elements.productFormType.value,
-      description: event.target.elements.productFormProductDes.value
+      ProductTitle: event.target.elements.productFormTitle.value,
+      ProductPrice: event.target.elements.productFormPrice.value,
+      ProductUniqueId: this.state.productUniqueId,
+      ProductOffer:event.target.elements.productFormOffer.value,
+      //type:event.target.elements.productFormType.value,
+      ProductDes: event.target.elements.productFormProductDes.value
       
     };
     this.setState({formObj:productObj});
@@ -48,21 +49,44 @@ class ProductForm extends React.Component {
       console.log('Matched');
     }
 
-
     axios.post("http://localhost:4000/product/storeProductInformation", productObj )
         .then(function(response) {
             console.log(response);
+            
         }) .catch(function (error) {
             console.log(error);
         });
+
+        this.uploadAttachedImage();
     
     
   }
 
-  
+  onChangeHandler(event){
 
-  
+    console.log(event.target.files[0]);
+    this.setState({
+      selectedFile: event.target.files[0],
+      loaded: 0,
+    })
 
+  }
+
+  uploadAttachedImage(){
+
+    const formData = new FormData();
+    formData.append('Image', this.state.selectedFile, this.state.selectedFile.name);
+    formData.append('ComponentId', this.state.productUniqueId);
+    alert(5);
+    axios.post("http://localhost:4000/product/upload/", formData )
+        .then(function(response) {
+            console.log(response);
+            console.log('Image uploaded');
+            
+        }) .catch(function (error) {
+            console.log(error);
+        });
+  }
 
   render() {
 
@@ -70,7 +94,6 @@ class ProductForm extends React.Component {
     const { title, body, author } = this.state;
     var productToEdit = false;
     var email = "SaifTestEmail";
-    var productUniqueId = 1570967890024;
     return (
       
 
@@ -105,7 +128,7 @@ class ProductForm extends React.Component {
         <Form.Row>
           <Form.Group as={Col} controlId="productFormUniqueId">
             <Form.Label>Product Id </Form.Label>
-            <Form.Control placeholder="" value={productUniqueId} />
+            <Form.Control placeholder="" value={this.state.productUniqueId} />
           </Form.Group>
 
           <Form.Group as={Col} controlId="productFormOffer">
@@ -132,6 +155,8 @@ class ProductForm extends React.Component {
         <Form.Group id="productFormConfirmBox">
           <Form.Check type="checkbox" label="Please Confirm Details Above Are Correct " />
         </Form.Group>
+
+        <Form.File id="custom-file" label="Custom file input" custom onChange={this.onChangeHandler}/>
 
         <Button variant="primary" type="submit">
           Submit
