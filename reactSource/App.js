@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Home from "./components/Home";
 import About from "./components/About";
-import Form from "./components/Form";
+import ProductForm from "./components/ProductForm";
 import ContactUs from "./components/ContactUs";
 import ProductShop from "./components/ProductShop";
 import BirdGallery from "./components/BirdGallery";
@@ -10,9 +10,9 @@ class NavLink extends Component {
 
   render() {
       return (
-        <li className={"nav-item " + (this.props.isActive ? "active": "")}>
+        <li className={"nav-item" + (this.props.isActive ? "active": "")}>
 
-          <h4 className="nav-link" onClick={() => this.props.onClick()}> 
+          <h4 className="nav-link navigationItemStyling" onClick={() => this.props.onClick()}> 
             {this.props.text}
           </h4>
               
@@ -29,7 +29,7 @@ class App extends Component {
       links: [
         {path: "/", text: "Home", isActive: false},
         {path: "/ProductShop", text: "Product Shop", isActive: false},
-        {path: "/Form", text: "Form", isActive: false},
+        {path: "/ProductForm", text: "Product Form", isActive: false},
         {path: "/About", text: "About Us", isActive: false},
         {path: "/BirdGallery", text: "Gallery", isActive: false},
       ]
@@ -54,7 +54,7 @@ class App extends Component {
       
       <div className="App">
 	      
-	      <nav className="navbar navbar-expand-lg navbar-light  bg-light">
+	      <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <ul className="navbar-nav">
             {this.state.links.map((link, i) => 
               < NavLink
@@ -71,7 +71,7 @@ class App extends Component {
 		      <div>
 		      	<Route exact path="/" component={Home} />
 	            <Route exact path="/About" component={About} />
-	            <Route exact path="/Form" component={Form} />
+	            <Route exact path="/ProductForm" component={ProductForm} />
 	            <Route exact path="/Contact" component={ContactUs} />
 	            <Route exact path="/ProductShop" component={ProductShop} />
               <Route exact path="/BirdGallery" component={BirdGallery} />
