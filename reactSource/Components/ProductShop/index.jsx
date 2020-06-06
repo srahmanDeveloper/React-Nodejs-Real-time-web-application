@@ -107,15 +107,21 @@ class ProductShop extends React.Component {
 
       <div className="container-fluid">
 
-            
-        <div className="row sectionGap">
+        <br />
+        <div className="row">
+
+             <h2 className="productTitle">  Online Product Gallery(New/Used) </h2>
+
+        </div>
+
+        <div className="row sectionGap productTitle">
 
             <div className="usedProductHighlighter"> <p className="productHighlighterText"> Used </p> </div>
             <div className="newProductHighlighter"> <p className="productHighlighterText"> New </p>  </div>
 
         </div>
 
-        <div className="row sectionGap">
+        <div className="row sectionGap productShopMainItems">
 
           
             
@@ -125,8 +131,8 @@ class ProductShop extends React.Component {
                 <div className="col-sm-10" className="panelMargin">
                   <div className={ product.ProductType == 'Used' ? 'productOldImageBorder' : 'productNewImageBorder' }>
                   
-                  <img src={require(`C:/Users/saif/ToyShop/assetSource/upload/${product.ProductUniqueId}.png`)} onClick={() => this.setState({ isOpen: true, selectedImageSrc: require(`C:/Users/saif/ToyShop/assetSource/upload/${product.ProductUniqueId}.png`) })} style={{height:200, width:200}} />
-                  
+                  <center><img src={require(`C:/Users/saif/ToyShop/assetSource/upload/${product.ProductUniqueId}.png`)} onClick={() => this.setState({ isOpen: true, selectedImageSrc: require(`C:/Users/saif/ToyShop/assetSource/upload/${product.ProductUniqueId}.png`) })} style={{height:200, width:200}} /> </center>
+                  < br/>
                   <p> Description: {product.ProductDes} </p>
                   <p> Src: {product.src} </p>
                   <p> Price: £{product.ProductPrice} </p>
