@@ -36,7 +36,7 @@ class ProductForm extends React.Component {
       ProductPrice: event.target.elements.productFormPrice.value,
       ProductUniqueId: this.state.productUniqueId,
       ProductOffer:event.target.elements.productFormOffer.value,
-      //type:event.target.elements.productFormType.value,
+      ProductType:event.target.elements.productFormType.value,
       ProductDes: event.target.elements.productFormProductDes.value
       
     };
@@ -97,9 +97,13 @@ class ProductForm extends React.Component {
     return (
       
 
-      <Form onSubmit={this.handleSubmit}>
+      <Form  onSubmit={this.handleSubmit}>
+        <div className="formBackGround">
+        <br />
         
-        <Form.Row>
+        <h3 className="formTitle"> Add New Toy </h3>
+        <br />
+        <Form.Row className="inputStyle">
           <Form.Group as={Col} controlId="productFormTitle">
             <Form.Label>Product Title</Form.Label>
             <Form.Control />
@@ -113,7 +117,7 @@ class ProductForm extends React.Component {
           </Form.Group>
         </Form.Row>
 
-        <Form.Row>
+        <Form.Row className="inputStyle">
           <Form.Group as={Col} controlId="productFormEmail">
             <Form.Label>Email</Form.Label>
             <Form.Control type="email"  placeholder="Enter email" />
@@ -125,7 +129,7 @@ class ProductForm extends React.Component {
           </Form.Group>
         </Form.Row>
 
-        <Form.Row>
+        <Form.Row className="inputStyle">
           <Form.Group as={Col} controlId="productFormUniqueId">
             <Form.Label>Product Id </Form.Label>
             <Form.Control placeholder="" value={this.state.productUniqueId} />
@@ -138,7 +142,7 @@ class ProductForm extends React.Component {
 
         </Form.Row>
 
-        <Form.Group controlId="productFormType">
+        <Form.Group className="inputStyle" controlId="productFormType">
           <Form.Label>Product Type</Form.Label>
           <Form.Control as="select">
             <option>Brand New</option>
@@ -146,21 +150,25 @@ class ProductForm extends React.Component {
           </Form.Control>
         </Form.Group>
 
-        <Form.Group controlId="productFormProductDes">
+        <Form.Group className="inputStyle" controlId="productFormProductDes">
           <Form.Label>Product Description </Form.Label>
-          <Form.Control as="textarea" rows="5" />
+          <Form.Control as="textarea" rows="3" />
         </Form.Group>
 
 
-        <Form.Group id="productFormConfirmBox">
+        <Form.Group className="inputStyle" id="productFormConfirmBox">
           <Form.Check type="checkbox" label="Please Confirm Details Above Are Correct " />
         </Form.Group>
 
-        <Form.File id="custom-file" label="Custom file input" custom onChange={this.onChangeHandler}/>
-
-        <Button variant="primary" type="submit">
+        <Form.File id="custom-file" className="inputStyle" onChange={this.onChangeHandler}/>
+        <br />
+        <Button className="inputStyle" variant="primary" type="submit">
           Submit
         </Button>
+        <br />
+        <br />
+
+      </div>
       </Form>
 
       
