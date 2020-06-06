@@ -80,6 +80,7 @@ body, html {
     position:relative;
     left: 20%;
     margin-bottom: 10%;
+    margin-top:1%;
   }
 
   .formTitle{
@@ -102,4 +103,39 @@ body, html {
 
   .navbar-nav{
     margin-left: 62%;
+  }
+
+  .productOldImageBorder{
+
+    border: 2px solid red;
+  }
+
+  .productNewImageBorder{
+
+    border: 2px solid green;
+  }
+
+  .usedProductHighlighter{
+
+    border: 5px solid red;
+    border-radius: 50%;
+    height: 80px;
+    width: 150px;
+  }
+
+  .newProductHighlighter{
+
+    border: 5px solid green;
+    border-radius: 50%;
+    height: 80px;
+    width: 150px;
+  }
+
+  .productHighlighterText{
+
+    margin-left: 40%;
+    margin-top: 15%;
+    text-decoration: underline;
+    font-weight: 800;
+
   }
