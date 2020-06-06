@@ -18,6 +18,9 @@ let ProductAdd = new Schema({
   },
   ProductPrice: {
     type: String
+  },
+  ProductType: {
+    type: String
   }
 
 },{
