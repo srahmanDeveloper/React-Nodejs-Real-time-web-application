@@ -83,11 +83,27 @@ body, html {
     margin-top:1%;
   }
 
+  .editFormBackGround {
+    background-color: #663300;
+    max-width: 100%;
+    position:relative;
+    left: 20%;
+    margin-bottom: 10%;
+    margin-top:1%;
+  }
+
   .formTitle{
 
     color:#ffffff;
     position:relative;
     left:40%;
+  }
+
+  .formEditTitle{
+
+    color:#ffffff;
+    position:relative;
+    left:20%;
   }
 
   .navigationItemStyling {
@@ -147,5 +163,11 @@ body, html {
   }
   .productTitle{
 
-    margin-left: 40%;
+    margin-left: 35%;
+  }
+
+  .offer{
+
+    font-size: 1.5em;
+    color: #ff0000;
   }
