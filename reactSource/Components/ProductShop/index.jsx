@@ -18,7 +18,10 @@ class ProductShop extends React.Component {
       isOpen: false,
       photoIndex: 0,
       isOld: true,
-      messages: [{
+      isEditMode: false,
+      editProductId: '',
+      editProductIndex: 0,
+      listOfProducts: [{
         _id: "5da311928d7efb06d49ae6c8",
         ProductUniqueId: 1570967890024,
         ProductPrice: "20",
@@ -34,6 +37,10 @@ class ProductShop extends React.Component {
 
     this.getProductInformation();
     this.deleteProduct = this.deleteProduct.bind(this);
+    this.handleEditForm = this.handleEditForm.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.runEditMode = this.runEditMode.bind(this);
+    this.stopEditMode = this.stopEditMode.bind(this);
   }
 
   getProductInformation(){
@@ -49,9 +56,46 @@ class ProductShop extends React.Component {
 
         console.log(responseResultAfterImageUpdate);
 
-        this.setState({ isOpen:false,photoIndex:0,messages: responseResultAfterImageUpdate});
+        this.setState({ isOpen:false,photoIndex:0,listOfProducts: responseResultAfterImageUpdate});
         
       })
+  }
+
+  runEditMode(){
+
+    
+    this.setState({isEditMode: true});
+  }
+
+  stopEditMode(){
+
+    
+    this.setState({isEditMode: false});
+  }
+
+  handleSubmit(event){
+
+    event.preventDefault();
+
+    /*if(event.target.elements.productFormPassword.value == this.state.password ){
+
+      console.log('Matched');
+    }*/
+
+    console.clear();
+    console.log(this.state.editProductIndex);
+    console.log(this.state.editProductId);
+
+    axios.post("http://localhost:4000/product/editProduct/" + this.state.editProductId, this.state.listOfProducts[this.state.editProductIndex] )
+        .then(function(response) {
+            console.log(response);
+            location.reload();
+            
+        }) .catch(function (error) {
+            console.log(error);
+        });
+    
+    
   }
 
   setImageProductSource(response){
@@ -87,6 +131,7 @@ class ProductShop extends React.Component {
       .then(res => {
         
         console.log('Product Deleted');
+        location.reload();
         
       })
 
@@ -98,12 +143,67 @@ class ProductShop extends React.Component {
 
   }
 
+  handleEditForm(event,id,el){
+
+    /*console.log(el);
+    console.log(id);
+    console.log(this.state.listOfProducts[0]);
+
+    console.log(event.target.value);*/
+
+    
+
+    var updatedListOfProducts = this.state.listOfProducts;
+    var selectedProductIndex = 0;
+    var selectedProductId = '';
+
+    for(var each = 0; each < updatedListOfProducts.length; each++){
+
+      if(updatedListOfProducts[each].ProductUniqueId == id){
+
+        selectedProductIndex = each;
+        selectedProductId = updatedListOfProducts[each]._id;
+        console.log(selectedProductId);
+
+        switch(el){
+
+          case 'Price':
+            updatedListOfProducts[each].ProductPrice  = event.target.value;
+          break;
+
+          case 'Offer':
+            updatedListOfProducts[each].ProductOffer  = event.target.value;
+          break;
+
+          case 'Type':
+            updatedListOfProducts[each].ProductType  = event.target.value;
+          break;
+
+          case 'Description':
+            updatedListOfProducts[each].ProductDes  = event.target.value;
+          break;
+
+          case 'Title':
+            updatedListOfProducts[each].ProductTitle  = event.target.value;
+          break;
+
+        }
+        
+      }
+    }
+    
+    this.setState({editProductId: selectedProductId, editProductIndex: selectedProductIndex, listOfProducts: updatedListOfProducts});
+
+    //this.setState({listOfProducts: updatedListOfProducts });
+
+  }
+
 
   render() {
 
     /*var  photoIndex = 0;
     var  isOpen = false;*/
-    var isEditMode = true;
+    
 
     return (
 
@@ -120,6 +220,22 @@ class ProductShop extends React.Component {
 
             <div className="usedProductHighlighter"> <p className="productHighlighterText"> Used </p> </div>
             <div className="newProductHighlighter"> <p className="productHighlighterText"> New </p>  </div>
+            <h4> Would you like to edit existing products? </h4>
+
+            {this.state.isEditMode === false &&
+              <Button onClick={this.runEditMode}className="" variant="primary">
+                        Run Edit Mode
+                      </Button>
+            }
+            
+            {this.state.isEditMode === true &&
+
+              <Button onClick={this.stopEditMode} className="" variant="primary">
+                        Stop Edit Mode
+                      </Button>
+            }
+            
+
 
         </div>
 
@@ -127,7 +243,7 @@ class ProductShop extends React.Component {
 
         <div className="row sectionGap productShopMainItems">
 
-            {this.state.messages.map(product => (
+            {this.state.listOfProducts.map(product => (
               
               
 
@@ -135,7 +251,7 @@ class ProductShop extends React.Component {
 
                 <div className="col-sm-10" className="panelMargin">
 
-                  {isEditMode === true &&
+                  {this.state.isEditMode === true &&
                     
                     <Form  onSubmit={this.handleSubmit}>
                       <div className="editFormBackGround">
@@ -151,14 +267,14 @@ class ProductShop extends React.Component {
 
                       <Form.Group as={Col} controlId="productFormTitle">
                         <Form.Label>Product Title</Form.Label>
-                        <Form.Control />
+                        <Form.Control onChange={(e) => this.handleEditForm( e,product.ProductUniqueId,'Title')} value={product.ProductTitle}/>
                       </Form.Group>
 
                       
 
                       <Form.Group as={Col} controlId="productFormPrice">
                         <Form.Label> Product Price </Form.Label>
-                        <Form.Control value={product.ProductPrice} />
+                        <Form.Control placeholder="Price" onChange={(e) => this.handleEditForm( e,product.ProductUniqueId,'Price')} value={product.ProductPrice} />
                       </Form.Group>
                       
 
@@ -178,14 +294,14 @@ class ProductShop extends React.Component {
 
                       <Form.Group as={Col} controlId="productFormOffer">
                         <Form.Label>Product Offer </Form.Label>
-                        <Form.Control placeholder="" value={product.ProductOffer} />
+                        <Form.Control placeholder="" onChange={(e) => this.handleEditForm( e,product.ProductUniqueId,'Offer')} value={product.ProductOffer} />
                       </Form.Group>
 
                      
 
                       <Form.Group as={Col}  controlId="productFormType">
                         <Form.Label>Product Type</Form.Label>
-                        <Form.Control as="select">
+                        <Form.Control as="select" onChange={(e) => this.handleEditForm( e,product.ProductUniqueId,'Type')} value={product.ProductType}>
                           <option>Brand New</option>
                           <option> Used </option>
                         </Form.Control>
@@ -193,7 +309,7 @@ class ProductShop extends React.Component {
 
                       <Form.Group as={Col}  controlId="productFormProductDes">
                         <Form.Label>Product Description </Form.Label>
-                        <Form.Control as="textarea" rows="3" value={product.ProductDes} />
+                        <Form.Control as="textarea" rows="3" onChange={(e) => this.handleEditForm( e,product.ProductUniqueId,'Description')} value={product.ProductDes} />
                       </Form.Group>
 
 
@@ -212,7 +328,7 @@ class ProductShop extends React.Component {
                   }
 
 
-                  {isEditMode === false &&
+                  {this.state.isEditMode === false &&
                     
                     <div className={ product.ProductType == 'Used' ? 'productOldImageBorder' : 'productNewImageBorder' }>
                   
