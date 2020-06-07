@@ -52,7 +52,7 @@ productRoutes.route('/getProductInformation').get(function (req, res) {
 
 productRoutes.route('/getFilesFromProductGallery').get(function (req, res) {
     
-    const testFolder = 'C:/Users/saif/OnlineProductShop/src/assets/images/Gallery/';
+    const testFolder = 'C:/Users/saif/ToyShop/assetSource/gallery/';
     
     var files = [];
 
@@ -75,12 +75,17 @@ productRoutes.route('/deleteProduct/:id').get(function (req, res) {
 
 productRoutes.route('/editProduct/:id').post(function (req, res) {
     ProductAdd.findById(req.params.id, function(err, product) {
+    //console.log(req.body);
+    //console.log(product);
+
     if (!product)
-      return next(new Error('Could not load Document'));
+      return 'Failed';
     else {
         product.ProductDes = req.body.ProductDes;
         product.ProductPrice = req.body.ProductPrice;
         product.ProductOffer = req.body.ProductOffer;
+        product.ProductTitle = req.body.ProductTitle;
+        product.ProductType = req.body.ProductType;
 
         product.save().then(product => {
           res.json('Update complete');
