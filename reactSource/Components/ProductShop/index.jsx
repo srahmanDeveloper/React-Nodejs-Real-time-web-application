@@ -6,21 +6,24 @@ import 'react-image-lightbox/style.css';
 import Button from 'react-bootstrap/Button';
 import { Col, Row, Form } from "react-bootstrap";
 
-
-
 class ProductShop extends React.Component {
 
-  
   constructor(props) {
 
     super(props);
     this.state = {
+
       isOpen: false,
       photoIndex: 0,
       isOld: true,
       isEditMode: false,
       editProductId: '',
       editProductIndex: 0,
+      editSelectedPassword: 'UpdateMe0692',
+      productsInBasket : [],
+      totalSpend : 0,
+      selectedProductQuantity: 0,
+
       listOfProducts: [{
         _id: "5da311928d7efb06d49ae6c8",
         ProductUniqueId: 1570967890024,
@@ -41,6 +44,8 @@ class ProductShop extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.runEditMode = this.runEditMode.bind(this);
     this.stopEditMode = this.stopEditMode.bind(this);
+    this.addProduct = this.addProduct.bind(this);
+    this.calculateTotalPrice = this.calculateTotalPrice.bind(this);
   }
 
   getProductInformation(){
@@ -48,43 +53,36 @@ class ProductShop extends React.Component {
     return axios.get('http://localhost:4000/product/getProductInformation')
       .then(res => {
         
-        // temp code to remove last item
-        //res.data = res.data.slice(0,-1);
         console.log(res.data);
-
         var responseResultAfterImageUpdate = this.setImageProductSource(res.data);
-
         console.log(responseResultAfterImageUpdate);
-
         this.setState({ isOpen:false,photoIndex:0,listOfProducts: responseResultAfterImageUpdate});
-        
       })
   }
 
   runEditMode(){
 
-    
     this.setState({isEditMode: true});
   }
 
   stopEditMode(){
 
-    
     this.setState({isEditMode: false});
   }
 
   handleSubmit(event){
 
     event.preventDefault();
-
-    /*if(event.target.elements.productFormPassword.value == this.state.password ){
+    
+    if(event.target.elements.productFormPassword.value == this.state.editSelectedPassword ){
 
       console.log('Matched');
-    }*/
 
-    console.clear();
-    console.log(this.state.editProductIndex);
-    console.log(this.state.editProductId);
+    } else {
+
+      alert('Password did not matched');
+      return;
+    }
 
     axios.post("http://localhost:4000/product/editProduct/" + this.state.editProductId, this.state.listOfProducts[this.state.editProductIndex] )
         .then(function(response) {
@@ -117,11 +115,6 @@ class ProductShop extends React.Component {
     return response;
   }
 
-  addProduct(product){
-
-    console.log(2);
-
-  }
 
   deleteProduct(event){
 
@@ -132,26 +125,15 @@ class ProductShop extends React.Component {
         
         console.log('Product Deleted');
         location.reload();
-        
       })
-
   }
 
   editProduct(product){
 
     console.log(2);
-
   }
 
   handleEditForm(event,id,el){
-
-    /*console.log(el);
-    console.log(id);
-    console.log(this.state.listOfProducts[0]);
-
-    console.log(event.target.value);*/
-
-    
 
     var updatedListOfProducts = this.state.listOfProducts;
     var selectedProductIndex = 0;
@@ -186,7 +168,6 @@ class ProductShop extends React.Component {
           case 'Title':
             updatedListOfProducts[each].ProductTitle  = event.target.value;
           break;
-
         }
         
       }
@@ -194,59 +175,125 @@ class ProductShop extends React.Component {
     
     this.setState({editProductId: selectedProductId, editProductIndex: selectedProductIndex, listOfProducts: updatedListOfProducts});
 
-    //this.setState({listOfProducts: updatedListOfProducts });
-
   }
 
+  addProduct(el,id,type){
+
+    var productIndex = 0;
+
+    for(var each =0; each < this.state.listOfProducts.length; each++){
+
+      if(this.state.listOfProducts[each].ProductUniqueId == id){
+        productIndex = each;
+      }
+    }
+
+    this.state.productsInBasket.push(this.state.listOfProducts[productIndex]);
+    this.setState({selectedProductQuantity:el.target.value});
+
+    //this.calculateTotalPrice();
+  }
+
+  calculateTotalPrice(){
+
+    var basket = this.state.productsInBasket;
+
+    console.log(basket);
+    var totalSpend = 0;
+
+    if(basket.length == 0){
+      
+      this.totalSpend = 0;
+      return;
+    }
+
+    for(var each = 0; each < basket.length; each++ ){
+      
+      var quantity = this.state.selectedProductQuantity;
+      var offer = basket[each].ProductOffer;
+      var price = basket[each].ProductPrice;
+      var offerSplitOne = offer.split('for');
+      offerSplitOne = offerSplitOne[0].trim();
+      offerSplitOne = Number(offerSplitOne);
+      var offerSplitTwo = offer.split('for');
+      offerSplitTwo = offerSplitTwo[1].trim();
+      offerSplitTwo = Number(offerSplitTwo);
+      var remainder = quantity % offerSplitOne;
+      var actual = quantity - remainder;
+      var offerRemainder = offerSplitOne - offerSplitTwo;
+      var splitQty = parseInt((quantity/offerSplitOne).toString());
+      var ratio = (offerSplitOne - offerRemainder) * price *splitQty;
+      totalSpend += (ratio) + (remainder * price);
+      this.totalSpend = totalSpend;
+      
+    }
+    this.setState({totalSpend:totalSpend});
+  }
+
+  removeFromBasket(product){
+
+    var length = this.productsInBasket.length;
+    var basketAfterRemoved = [];
+    for(var each = 0; each < length; each++){
+
+      if(this.productsInBasket[each]._id !=  product._id){
+        basketAfterRemoved.push(this.productsInBasket[each]);
+      }
+    }
+    this.productsInBasket = basketAfterRemoved;
+    this.calculateTotalPrice(this.productsInBasket);
+  }
 
   render() {
-
-    /*var  photoIndex = 0;
-    var  isOpen = false;*/
-    
 
     return (
 
       <div className="container-fluid">
-
         <br />
         <div className="row">
-
              <h2 className="productTitle">  Online Product Gallery(New/Used) </h2>
-
         </div>
 
-        <div className="row sectionGap productTitle">
+        <div className="row sectionGap">
 
-            <div className="usedProductHighlighter"> <p className="productHighlighterText"> Used </p> </div>
-            <div className="newProductHighlighter"> <p className="productHighlighterText"> New </p>  </div>
-            <h4> Would you like to edit existing products? </h4>
+          {this.state.productsInBasket.map(product => (
+              
 
+              <div key={product._id} className="col-sm-2 basket panelMargin">    
+                <p> Title: {product.ProductTitle}</p>
+                <p> Price: {product.ProductPrice}</p>
+                <p> Type: {product.ProductType}</p>
+                <p> Quantity: {this.state.selectedProductQuantity}</p>
+              
+              </div>
+          ))}
+          <p className="basket"> Total Cost: {this.state.totalSpend} </p>
+        </div>
+
+
+        <div className="row sectionGap">
+             <h4 className="productTitle"> Would you like to edit existing products? </h4>
             {this.state.isEditMode === false &&
               <Button onClick={this.runEditMode}className="" variant="primary">
                         Run Edit Mode
                       </Button>
             }
-            
             {this.state.isEditMode === true &&
 
               <Button onClick={this.stopEditMode} className="" variant="primary">
                         Stop Edit Mode
                       </Button>
             }
-            
-
-
         </div>
+        <div className="row sectionGap productTitle">
 
-        
-
+            <div className="usedProductHighlighter"> <p className="productHighlighterText"> Used </p> </div>
+            <div className="newProductHighlighter"> <p className="productHighlighterText"> New </p>  </div>
+        </div>
         <div className="row sectionGap productShopMainItems">
 
             {this.state.listOfProducts.map(product => (
               
-              
-
               <div className="row" key={product._id}>
 
                 <div className="col-sm-10" className="panelMargin">
@@ -255,37 +302,26 @@ class ProductShop extends React.Component {
                     
                     <Form  onSubmit={this.handleSubmit}>
                       <div className="editFormBackGround">
-
-                      
-                        
                       <br />
                       
                       <h3 className="formEditTitle"> Edit Existing Toy </h3>
                       <br />
                       <center><img src={require(`C:/Users/saif/ToyShop/assetSource/upload/${product.ProductUniqueId}.png`)} onClick={() => this.setState({ isOpen: true, selectedImageSrc: require(`C:/Users/saif/ToyShop/assetSource/upload/${product.ProductUniqueId}.png`) })} style={{height:200, width:400}} /> </center>
 
-
                       <Form.Group as={Col} controlId="productFormTitle">
                         <Form.Label>Product Title</Form.Label>
                         <Form.Control onChange={(e) => this.handleEditForm( e,product.ProductUniqueId,'Title')} value={product.ProductTitle}/>
                       </Form.Group>
 
-                      
-
                       <Form.Group as={Col} controlId="productFormPrice">
                         <Form.Label> Product Price </Form.Label>
                         <Form.Control placeholder="Price" onChange={(e) => this.handleEditForm( e,product.ProductUniqueId,'Price')} value={product.ProductPrice} />
                       </Form.Group>
-                      
-
-                      
                         
                       <Form.Group as={Col} controlId="productFormPassword">
                         <Form.Label>Admin Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" />
                       </Form.Group>
-                      
-
                       
                       <Form.Group as={Col} controlId="productFormUniqueId">
                         <Form.Label>Product Id </Form.Label>
@@ -296,8 +332,6 @@ class ProductShop extends React.Component {
                         <Form.Label>Product Offer </Form.Label>
                         <Form.Control placeholder="" onChange={(e) => this.handleEditForm( e,product.ProductUniqueId,'Offer')} value={product.ProductOffer} />
                       </Form.Group>
-
-                     
 
                       <Form.Group as={Col}  controlId="productFormType">
                         <Form.Label>Product Type</Form.Label>
@@ -340,13 +374,10 @@ class ProductShop extends React.Component {
                         <p> <b> Price: £{product.ProductPrice} </b> </p>
                         <p className="offer"> <b> Offer: {product.ProductOffer} </b> </p>
                         
+                        <input type="number" onChange={(e) => this.addProduct( e,product.ProductUniqueId,'Type')} className="quantityHeight" id="quantity" placeholder="Qty" />
 
-                        <input type="number" className="quantityHeight" id="quantity" placeholder="Qty" />
-
-                        <button className="button btn btn-primary" onClick={this.addProduct}>Add To Basket </button>
+                        <button className="button btn btn-primary" onClick={this.calculateTotalPrice}>Add To Basket </button>
                         <button data-param={product._id} className="button btn btn-danger" onClick={this.deleteProduct}>Delete</button>
-
-                        <button className="button btn btn-success" onClick={this.editProduct}>Edit</button>
                       </div>
 
                     }
@@ -364,7 +395,6 @@ class ProductShop extends React.Component {
             <Lightbox
               mainSrc={this.state.selectedImageSrc}
               onCloseRequest={() => this.setState({ isOpen: false })}
-              
             />
           )}
         </div>
@@ -373,6 +403,5 @@ class ProductShop extends React.Component {
     )
   }
 }
-
 
 export default ProductShop;
