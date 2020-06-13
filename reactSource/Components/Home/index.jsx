@@ -212,7 +212,7 @@ constructor(props) {
 							  </div>
 					          
 					          <input type="text" value={this.state.typedMessage} onChange={this.updateMessage.bind(this)}></input>
-					          <button onClick={this.sendMessage.bind(this)}>Send</button>
+					          <button className="button btn btn-primary" onClick={this.sendMessage.bind(this)}>Send</button>
 
 					          
   
