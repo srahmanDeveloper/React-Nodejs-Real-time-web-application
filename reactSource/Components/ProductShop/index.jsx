@@ -5,6 +5,9 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import Button from 'react-bootstrap/Button';
 import { Col, Row, Form } from "react-bootstrap";
+import socketIOClient from "socket.io-client";
+
+var itemCount = 0;
 
 class ProductShop extends React.Component {
 
@@ -23,7 +26,7 @@ class ProductShop extends React.Component {
       productsInBasket : [],
       totalSpend : 0,
       selectedProductQuantity: 0,
-
+      totalQuantity: 0,
       listOfProducts: [{
         _id: "5da311928d7efb06d49ae6c8",
         ProductUniqueId: 1570967890024,
@@ -39,12 +42,14 @@ class ProductShop extends React.Component {
     }
 
     this.getProductInformation();
+    this.initiateReaTimeProductUpdate();
     this.deleteProduct = this.deleteProduct.bind(this);
     this.handleEditForm = this.handleEditForm.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.runEditMode = this.runEditMode.bind(this);
     this.stopEditMode = this.stopEditMode.bind(this);
     this.addProduct = this.addProduct.bind(this);
+    this.setSelectedQuantity = this.setSelectedQuantity.bind(this);
     this.calculateTotalPrice = this.calculateTotalPrice.bind(this);
   }
 
@@ -53,9 +58,9 @@ class ProductShop extends React.Component {
     return axios.get('http://localhost:4000/product/getProductInformation')
       .then(res => {
         
-        console.log(res.data);
+        
         var responseResultAfterImageUpdate = this.setImageProductSource(res.data);
-        console.log(responseResultAfterImageUpdate);
+        
         this.setState({ isOpen:false,photoIndex:0,listOfProducts: responseResultAfterImageUpdate});
       })
   }
@@ -86,7 +91,7 @@ class ProductShop extends React.Component {
 
     axios.post("http://localhost:4000/product/editProduct/" + this.state.editProductId, this.state.listOfProducts[this.state.editProductIndex] )
         .then(function(response) {
-            console.log(response);
+            
             location.reload();
             
         }) .catch(function (error) {
@@ -106,7 +111,6 @@ class ProductShop extends React.Component {
         response[src].ProductUniqueId = 1570968011856;
       }
       var ImgSrc = require('C:/Users/saif/ToyShop/assetSource/upload/' + response[src].ProductUniqueId + '.png');
-      console.log(ImgSrc);
       
       response[src].thumb = ImgSrc;
       response[src].src = ImgSrc;
@@ -145,7 +149,6 @@ class ProductShop extends React.Component {
 
         selectedProductIndex = each;
         selectedProductId = updatedListOfProducts[each]._id;
-        console.log(selectedProductId);
 
         switch(el){
 
@@ -177,56 +180,63 @@ class ProductShop extends React.Component {
 
   }
 
+  setSelectedQuantity(el){
+
+    this.setState({selectedProductQuantity:el.target.value});
+  }
+
   addProduct(el,id,type){
 
+    
     var productIndex = 0;
-
+    
     for(var each =0; each < this.state.listOfProducts.length; each++){
 
       if(this.state.listOfProducts[each].ProductUniqueId == id){
+
+        console.log(this.state.listOfProducts[each].ProductUniqueId);
         productIndex = each;
       }
     }
-
+    
     this.state.productsInBasket.push(this.state.listOfProducts[productIndex]);
-    this.setState({selectedProductQuantity:el.target.value});
-
-    //this.calculateTotalPrice();
+    this.calculateTotalPrice();
+    itemCount++;
   }
 
   calculateTotalPrice(){
 
-    var basket = this.state.productsInBasket;
+    var basket = this.state.productsInBasket[itemCount];
 
-    console.log(basket);
-    var totalSpend = 0;
+    var totalSpend = this.state.totalSpend;
 
-    if(basket.length == 0){
-      
-      this.totalSpend = 0;
-      return;
-    }
+    
+    var quantity = Number(this.state.selectedProductQuantity);
+    //this.state.totalQuantity += quantity;
 
-    for(var each = 0; each < basket.length; each++ ){
+    this.setState({totalQuantity: Number(this.state.totalQuantity) + quantity});
+
+    console.log('Quantity -- ' + quantity);
+    var offer = basket.ProductOffer;
+    var price = basket.ProductPrice;
+    console.log('Price -- ' + price);
+    var offerSplitOne = offer.split('for');
+    offerSplitOne = offerSplitOne[0].trim();
+    offerSplitOne = Number(offerSplitOne);
+    var offerSplitTwo = offer.split('for');
+    offerSplitTwo = offerSplitTwo[1].trim();
+    offerSplitTwo = Number(offerSplitTwo);
+    var remainder = quantity % offerSplitOne;
+    var actual = quantity - remainder;
+    var offerRemainder = offerSplitOne - offerSplitTwo;
+    var splitQty = parseInt((quantity/offerSplitOne).toString());
+    var ratio = (offerSplitOne - offerRemainder) * price *splitQty;
+    totalSpend += (ratio) + (remainder * price);
+    console.log(totalSpend);
       
-      var quantity = this.state.selectedProductQuantity;
-      var offer = basket[each].ProductOffer;
-      var price = basket[each].ProductPrice;
-      var offerSplitOne = offer.split('for');
-      offerSplitOne = offerSplitOne[0].trim();
-      offerSplitOne = Number(offerSplitOne);
-      var offerSplitTwo = offer.split('for');
-      offerSplitTwo = offerSplitTwo[1].trim();
-      offerSplitTwo = Number(offerSplitTwo);
-      var remainder = quantity % offerSplitOne;
-      var actual = quantity - remainder;
-      var offerRemainder = offerSplitOne - offerSplitTwo;
-      var splitQty = parseInt((quantity/offerSplitOne).toString());
-      var ratio = (offerSplitOne - offerRemainder) * price *splitQty;
-      totalSpend += (ratio) + (remainder * price);
-      this.totalSpend = totalSpend;
       
-    }
+      
+    
     this.setState({totalSpend:totalSpend});
   }
 
@@ -244,6 +254,39 @@ class ProductShop extends React.Component {
     this.calculateTotalPrice(this.productsInBasket);
   }
 
+  initiateReaTimeProductUpdate(nextProps) {
+
+    
+
+    const socket = socketIOClient('http://localhost:4000');
+
+    socket.on("FromAPI", data => {
+
+      console.log(data);
+
+    });
+
+    this.getMessages();
+    
+  }
+
+  getMessages(){
+
+    const socket = socketIOClient('http://localhost:4000');
+    socket.on('new-product', (message) => {
+      console.log(message);
+      //alert(message);
+      var self = this;
+      setTimeout(function(){
+        self.getProductInformation();
+      },15000);
+      
+      
+    });
+
+
+  }
+
   render() {
 
     return (
@@ -254,33 +297,44 @@ class ProductShop extends React.Component {
              <h2 className="productTitle">  Online Product Gallery(New/Used) </h2>
         </div>
 
-        <div className="row sectionGap">
+        {this.state.isEditMode === false && this.state.totalSpend > 0 &&
+          <div className="row">
+            <h4 className="basketText"> Product Basket  </h4>
+            {this.state.productsInBasket.map(product => (
+                
 
-          {this.state.productsInBasket.map(product => (
+                <div key={product._id} className="col-sm-2 selectedProductBasket">    
+                  <p> Title: {product.ProductTitle}</p>
+                  <p> Price: {product.ProductPrice}</p>
+                  <p> Type: {product.ProductType}</p>
+                  
+                
+                </div>
+            ))}
+            
+            <div className="col-sm-2 selectedProductPriceBasket">    
               
 
-              <div key={product._id} className="col-sm-2 basket panelMargin">    
-                <p> Title: {product.ProductTitle}</p>
-                <p> Price: {product.ProductPrice}</p>
-                <p> Type: {product.ProductType}</p>
-                <p> Quantity: {this.state.selectedProductQuantity}</p>
-              
-              </div>
-          ))}
-          <p className="basket"> Total Cost: {this.state.totalSpend} </p>
-        </div>
+              <p> Total Items: {this.state.totalQuantity} </p>
+              <p> Total Saving: £{this.state.totalSpend} </p>
+              <p> Total Cost: £{this.state.totalSpend} </p>
+            </div>
+            
+          </div>
+        }
+        
 
 
         <div className="row sectionGap">
              <h4 className="productTitle"> Would you like to edit existing products? </h4>
             {this.state.isEditMode === false &&
-              <Button onClick={this.runEditMode}className="" variant="primary">
+              <Button onClick={this.runEditMode}className="button btn btn-primary" variant="primary">
                         Run Edit Mode
                       </Button>
             }
             {this.state.isEditMode === true &&
 
-              <Button onClick={this.stopEditMode} className="" variant="primary">
+              <Button onClick={this.stopEditMode} className="button btn btn-primary" variant="primary">
                         Stop Edit Mode
                       </Button>
             }
@@ -374,9 +428,9 @@ class ProductShop extends React.Component {
                         <p> <b> Price: £{product.ProductPrice} </b> </p>
                         <p className="offer"> <b> Offer: {product.ProductOffer} </b> </p>
                         
-                        <input type="number" onChange={(e) => this.addProduct( e,product.ProductUniqueId,'Type')} className="quantityHeight" id="quantity" placeholder="Qty" />
+                        <input type="number" className="quantityHeight" onChange={(e) => this.setSelectedQuantity(e)} id="quantity" placeholder="Qty" />
 
-                        <button className="button btn btn-primary" onClick={this.calculateTotalPrice}>Add To Basket </button>
+                        <button className="button btn btn-primary" onClick={(e) => this.addProduct( e,product.ProductUniqueId,'Type')} >Add To Basket </button>
                         <button data-param={product._id} className="button btn btn-danger" onClick={this.deleteProduct}>Delete</button>
                       </div>
 
