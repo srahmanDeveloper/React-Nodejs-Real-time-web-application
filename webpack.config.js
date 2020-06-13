@@ -24,6 +24,8 @@ module.exports = {
         use: ['babel-loader'],
       },
 
+      { test: /\.css$/, loader: "style-loader!css-loader" },
+
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
         use: {
@@ -83,5 +85,7 @@ module.exports = {
     historyApiFallback: true,
     publicPath: '/',
     contentBase: './assetSource',
+    hot: false,
+    inline: false
   },
 };
