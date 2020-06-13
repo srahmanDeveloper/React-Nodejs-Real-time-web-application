@@ -8,7 +8,7 @@ body, html {
   font-family: 'Nunito';
 }
 
-    p,h1,h2,h3 {
+    p,h1,h2,h3,h4 {
 
       color: #804000;
     }
@@ -44,7 +44,7 @@ body, html {
     }
 
     .sectionGap{
-      margin-top: 5em;
+      margin-top: 1.5em;
     }
     .floatingImage{
 
@@ -64,6 +64,7 @@ body, html {
 	}
 
   .panelMargin{
+
     margin:55px 50px 50px 50px;
   }
 
@@ -170,4 +171,33 @@ body, html {
 
     font-size: 1.5em;
     color: #ff0000;
+  }
+
+  .basketText{
+
+    margin-top: 2em;
+  }
+
+  .basketPrice{
+
+    border: 5px solid green;
+    max-height: 1.8em;
+  }
+
+  .basketPanel{
+
+    border: 5px solid grey;
+    min-height: 1em;
+  }
+
+  .selectedProductBasket{
+
+    border: 1px solid grey;
+    margin-left: 10px;
+  }
+
+  .selectedProductPriceBasket{
+
+    border: 2px solid #804000;
+    margin-left: 20px;
   }
