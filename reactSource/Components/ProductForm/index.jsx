@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import { Col, Row, Form } from "react-bootstrap";
+import socketIOClient from "socket.io-client";
 
 class ProductForm extends React.Component {
 
@@ -52,10 +53,14 @@ class ProductForm extends React.Component {
     axios.post("http://localhost:4000/product/storeProductInformation", productObj )
         .then(function(response) {
             console.log(response);
+
             
         }) .catch(function (error) {
             console.log(error);
         });
+
+
+
 
         this.uploadAttachedImage();
     
@@ -77,11 +82,17 @@ class ProductForm extends React.Component {
     const formData = new FormData();
     formData.append('Image', this.state.selectedFile, this.state.selectedFile.name);
     formData.append('ComponentId', this.state.productUniqueId);
-    alert(5);
+    
     axios.post("http://localhost:4000/product/upload/", formData )
         .then(function(response) {
             console.log(response);
             console.log('Image uploaded');
+            setTimeout(function(){
+
+              const socket = socketIOClient('http://localhost:4000');
+              socket.emit('new-product', 'New Product Added');
+              
+            },5000);
             
         }) .catch(function (error) {
             console.log(error);
