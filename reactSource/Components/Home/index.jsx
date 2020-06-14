@@ -1,10 +1,12 @@
 import React, { Component, useState, useEffect } from 'react';
 import socketIOClient from "socket.io-client";
-
 import NewProduct from 'C:/Users/saif/ToyShop/assetSource/image/NewProduct.JPG';
 import SellProduct from 'C:/Users/saif/ToyShop/assetSource/image/SellProduct.JPG';
 import DynamicView from 'C:/Users/saif/ToyShop/assetSource/image/DynamicView.JPG';
 import Gallery from 'C:/Users/saif/ToyShop/assetSource/image/Gallery.JPG';
+import LiveChatImage from 'C:/Users/saif/ToyShop/assetSource/image/live.PNG';
+
+var $ = require( "jquery" );
 
 var url = 'SaifTest';
 
@@ -77,6 +79,7 @@ constructor(props) {
 		const socket = socketIOClient('http://localhost:4000');
 		socket.emit('new-message', message);
 		this.setState({typedMessage: ''});
+		$('.eachMessage').show().delay(15000).fadeOut();
 	}
 
 	updateMessage(event){
@@ -135,19 +138,32 @@ constructor(props) {
 
 					          
 					          <div className="col">
-					            <h4> Queries? </h4>
-					             <br/>
-					            <p> Coming Soon... </p>
+					            <h4> Live Support </h4>
+					             
+					            
 					          </div>
 					        </div>
 					        <div className="row">
-					          <div className="col">
-					            <button type="button" className="btn btn-dark button" name="getStarted"> Get Started </button>
+					          
+					          <div className="col-4">
+					            <p> <b> Live Chat With Us <img style={{height:50, width:50}} src ={LiveChatImage} /> </b></p>
 					          </div>
 
 					          <div className="col">
-					            <p> <b> Questions? Talk to our team <span className="glyphicon glyphicon-arrow-right"> </span> </b></p>
-					          </div>
+					            
+					          	<div className="chatPanel">
+								    {this.state.liveChat.map(each => (
+								      <div className="eachMessage" key={each.id}>{each.message}</div>
+								    ))}
+								  </div>
+						          
+						          <input className="chatPanelInput" type="text" value={this.state.typedMessage} onChange={this.updateMessage.bind(this)}></input>
+
+						          <button className="button btn btn-primary chatPanelButton" onClick={this.sendMessage.bind(this)}>Send</button>
+
+						          </div>
+
+					          
 
 					        </div>
 
@@ -202,17 +218,7 @@ constructor(props) {
 					          <span className="glyphicon glyphicon-ok-circle listIconOkay"> Mobile Number: 0750 87* ****</span>
 					          <span className="glyphicon glyphicon-ok-circle listIconOkay"> Fax Number: 01247******  </span>
 					          <span className="glyphicon glyphicon-ok-circle listIconOkay"> Address: ** The Green, Wigan, Lancashire, Wn5 *** </span>
-					          <br/>
-					          <h4> Live Chat </h4>
-					          <br/>
-					          <div>
-							    {this.state.liveChat.map(each => (
-							      <div className="each" key={each.id}>{each.message}</div>
-							    ))}
-							  </div>
 					          
-					          <input type="text" value={this.state.typedMessage} onChange={this.updateMessage.bind(this)}></input>
-					          <button className="button btn btn-primary" onClick={this.sendMessage.bind(this)}>Send</button>
 
 					          
   
