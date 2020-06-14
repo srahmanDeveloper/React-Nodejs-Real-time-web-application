@@ -16,7 +16,7 @@ class BirdGallery extends React.Component {
       photoIndex: 0,
       images: [{
         _id: 0,
-        firstImageId: 1,
+        imageId: 1,
         src: '',
         thumb:"",
         caption: ""
@@ -36,7 +36,7 @@ class BirdGallery extends React.Component {
           
           var sObj = {
             _id: image,
-            firstImageId: res.data[image].split('.')[0],
+            imageId: res.data[image].split('.')[0],
             src: '',
             thumb:"",
             caption: ""
@@ -62,7 +62,7 @@ class BirdGallery extends React.Component {
             
               <div key={product._id} className="col-sm-4" className="panelMargin">    
                 
-                <img onClick={() => this.setState({ isOpen: true })} src={require(`C:/Users/saif/ToyShop/assetSource/gallery/${product.firstImageId}.jpg`)} style={{height:200, width:200}} />
+                <img onClick={() => this.setState({ isOpen: true, photoIndex: product._id })} src={require(`C:/Users/saif/ToyShop/assetSource/gallery/${product.imageId}.jpg`)} style={{height:200, width:200}} />
               
               </div>
           ))}
