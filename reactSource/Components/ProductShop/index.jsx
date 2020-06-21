@@ -25,6 +25,7 @@ class ProductShop extends React.Component {
       editSelectedPassword: 'UpdateMe0692',
       productsInBasket : [],
       totalSpend : 0,
+      totalSaving: 0,
       selectedProductQuantity: 0,
       totalQuantity: 0,
       listOfProducts: [{
@@ -207,10 +208,7 @@ class ProductShop extends React.Component {
   calculateTotalPrice(){
 
     var basket = this.state.productsInBasket[itemCount];
-
     var totalSpend = this.state.totalSpend;
-
-    
     var quantity = Number(this.state.selectedProductQuantity);
     //this.state.totalQuantity += quantity;
 
@@ -229,15 +227,26 @@ class ProductShop extends React.Component {
     var remainder = quantity % offerSplitOne;
     var actual = quantity - remainder;
     var offerRemainder = offerSplitOne - offerSplitTwo;
+
     var splitQty = parseInt((quantity/offerSplitOne).toString());
     var ratio = (offerSplitOne - offerRemainder) * price *splitQty;
     totalSpend += (ratio) + (remainder * price);
     console.log(totalSpend);
-      
-      
-      
-    
     this.setState({totalSpend:totalSpend});
+
+    this.calculateTotalSaving(offerRemainder,price,splitQty);
+  }
+
+  calculateTotalSaving(offerRemainder,price,splitQty){
+
+  	console.log(splitQty + '--' + offerRemainder + '--' + price);
+  	var totalSave = offerRemainder * price *splitQty;
+  	console.log(totalSave);
+
+  	this.setState({
+  		totalSaving: this.state.totalSaving + totalSave
+  	});
+
   }
 
   removeFromBasket(product){
@@ -316,7 +325,7 @@ class ProductShop extends React.Component {
               
 
               <p> Total Items: {this.state.totalQuantity} </p>
-              <p> Total Saving: £{this.state.totalSpend} </p>
+              <p> Total Saving: £{this.state.totalSaving} </p>
               <p> Total Cost: £{this.state.totalSpend} </p>
             </div>
             
@@ -422,7 +431,7 @@ class ProductShop extends React.Component {
                   
                         <center><img src={require(`C:/Users/saif/ToyShop/assetSource/upload/${product.ProductUniqueId}.png`)} onClick={() => this.setState({ isOpen: true, selectedImageSrc: require(`C:/Users/saif/ToyShop/assetSource/upload/${product.ProductUniqueId}.png`) })} style={{height:200, width:400}} /> </center>
                         < br/>
-                        <p> <b> Title: {product.ProductText} </b> </p>
+                        <p> <b> Title: {product.ProductTitle} </b> </p>
                         <p> <b> Type: {product.ProductType} </b> </p>
                         <p> <b>Description: {product.ProductDes} </b> </p>
                         <p> <b> Price: £{product.ProductPrice} </b> </p>
